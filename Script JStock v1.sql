@@ -524,11 +524,16 @@ WHERE id_inventario = 1;                   /*POR EL MOTIVO ANTERIOR, OBTENDRÍAM
 
 /************OPERACIONES DML***************/
 
+/*INSERCIÓN DE LUGARES
+	- Lo más normal es que esto sólo suceda una vez, el instituto (a noser que sea Hogwarts) no va a estar cambiando su composición constantemente.
+*/
 
+#inserción de alas
 INSERT INTO ala (id, nombre) VALUES
 (1, "Ala Izquierda"),
 (2, "Ala Derecha");
 
+#inserción de plantas
 INSERT INTO planta (id_ala, id, nombre, mapa) VALUES
 (1, 0, "Planta Baja Izquierda", "map"),
 (1, 1, "Planta 1 Izquierda", "map"),
@@ -537,22 +542,29 @@ INSERT INTO planta (id_ala, id, nombre, mapa) VALUES
 (2, 4, "Planta 1 Derecha", "map"),
 (2, 5, "Planta 2 Derercha", "map");
 
+#inserción de aulas
 INSERT INTO aula (id_ala, id_planta, id, nombre) VALUES
 (1, 2, 0, "AULA 0"),
 (1, 2, 1, "AULA 1");
 
+/*
+	INSERCIONES RELATIVAS A OBJETOS 
+	*/
+
+#inserción de una nueva categoría
 INSERT INTO categoria (nombre) VALUES
 ("Informática"),
 ("Proyectores"),
 ("Periféricos"),
 ("Herramientas");
 
+#inserción de objetos
 INSERT INTO objeto (nombre, descripcion, categoria, id_aula) VALUES
 ("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
-("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
-("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
-("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
-("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
+("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),											#cuanta menos información tenga que meter el usuario escribiendo, mejor
+("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),											#es por ello que estaría bien que elementos como la categoría y el aula estuvieran dentro de un
+("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),											#combobox o algo parecido, y que si por ejemplo estoy en un aula y quiero registrar muchos
+("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),											#objetos en ella, con leer el aula en el que estoy una vez ya se vayan sumando de manera automática
 ("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
 ("PC HP", "Ordenador de sobremesa alta gama marca HP", 1, 0),
 ("Proyector BENQ", "Proyector BENQ con 300 luds", 2, 1),
@@ -561,6 +573,7 @@ INSERT INTO objeto (nombre, descripcion, categoria, id_aula) VALUES
 ("Proyector BENQ", "Proyector BENQ con 300 luds", 2, 1);
 
 
+#inserción de etiquetas
 INSERT INTO etiqueta (id_objeto) VALUES
 (1),
 (2),
@@ -574,22 +587,29 @@ INSERT INTO etiqueta (id_objeto) VALUES
 (10),
 (11);
 
+	/*
+	Tal y como está ahora la base de datos, el valor de id_objeto de la tabla etiqueta no puede ser nulo, quizás se debería permitir para poder almacenar etiquetas aunque estas no estén siendo
+	usadas, de manera que, cuando yo registre un objeto en un aula, automáticamente se asigne a la siguiente etiqueta que esté libre.
+	*/
 
 
+/*
+INSERCIÓN DE USUARIOS E INVENTARIADO
+*/
+
+#nuevo usuario root
 INSERT INTO usuario (nickname, nombre, pwd, admn) VALUES
 ("julen.herber@educa.jcyl.es", "julen", "1234a", 1);
 
+#nuevo usuario común
 INSERT INTO usuario (nickname, nombre, pwd, admn) VALUES
 ("usu1@educa.jcyl.es", "usuario1", "1234a", 0);
 
-
-DESCRIBE inventario_objeto;
-SELECT*FROM inventario_objeto;
-SELECT*FROM usuario;
-
+#nuevo inventario
 INSERT INTO inventario(nombre, fecha) VALUES
 ("Inventario de prueba", '2023-04-02 13:55:00');
 
+#iserción de un objeto al inventario
 INSERT INTO inventario_objeto(id_inventario, id_objeto, id_aula, id_usuario, fechaRegistro) VALUES
 (1, 2, 1, 1, (SELECT fechaAlta FROM objeto WHERE objeto.id = 2));
 
@@ -613,9 +633,55 @@ MUCHO CUIDADO CON ESTA CONSULTA, POR EL SIGUIENTE MOTIVO:
 
 
 
+/* 
+	ACTUALIZACIONES 
+	*/
 
+/* LA MÁS IMPORTANTE DE TODAS: QUÉ PASA CUANDO CAMBIAMOS DATOS DE UN OBJETO Y ESTO AFECTA AL RESTO DE TABLAS**/
+#movemos un objeto de un aula
+UPDATE objeto
+SET id_aula = 1
+WHERE objeto.id = 3;
 
+SELECT* FROM objeto WHERE 	id=3;
 
+SELECT*FROM inventario_objeto;
 
+#SI LO CAMBIAMOS DE UN LADO, VAMOS A TENER UNA INCONSISTENCIA:
+SELECT id_aula FROM inventario_objeto WHERE id_inventario=1 AND	id_objeto = 3;
+/* OJO: partiendo de la advertencia anterior: El objeto que hemos movido de aula ya constaba en el inventariado (por x motivo) que queremos usar,
+			y tenía otro aula. Si no queremos duplicados, tenemos que hacer un update también sobre la tabla inventario_objeto:
+			*/
 
+UPDATE inventario_objeto
+SET id_aula = (SELECT id_aula
+				FROM objeto
+				WHERE id = 3)
+WHERE id_objeto = 3;        #realizando de esta manera la consulta, sabemos que no nos vamos a equivocar, dado que esta recogiendo directamente el valor
+									 # de la otra tabla. Estaría bien que esto ocurriera con un trigger o desde el propio código. Que el usuario no tenga que cambiar las cosas dos veces
+									 
+									 
+
+/*Damos de baja un objeto*/
+UPDATE objeto
+SET fechaBaja = NOW() #por ejemplo
+WHERE id = 11;
+
+SELECT*FROM objeto WHERE id=11;
+
+/*cambiamos la categoría de un objeto*/
+UPDATE objeto
+SET categoria = 4
+WHERE id = 11;
+
+SELECT*FROM objeto WHERE id=11;
+
+/*modificamos los campos que el usuario va a meter de un objeto*/
+UPDATE objeto
+SET nombre = 'Portátil TOSHIBA', descripcion = 'Portátil de la marca TOSHIBA con procesador i9 de 10th generación'
+WHERE id = 5;
+
+SELECT*FROM objeto WHERE id=5;
+
+/********NO FIJAREMOS LAS SENTENCIAS DELETE HASTA QUE NO SEPAMOS EXACTAMENTE QUÉ DATOS QUEREMOS QUE PERDUREN Y CUÁLES NO************/
 
