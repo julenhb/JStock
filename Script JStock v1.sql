@@ -46,10 +46,8 @@ CREATE TABLE aula(
 id INT(11) NOT NULL PRIMARY KEY,
 nombre VARCHAR (40) NOT NULL UNIQUE,
 id_planta INT (11) NOT NULL,
-id_ala INT(11) NOT NULL,
 num_objetos INT DEFAULT 0,
 
-FOREIGN KEY (id_ala) REFERENCES ala(id),
 FOREIGN KEY (id_planta) REFERENCES planta(id)
 
 );
@@ -86,8 +84,11 @@ nombre VARCHAR (255) NOT NULL,
 descripcion VARCHAR (255) NOT NULL,
 num_serie VARCHAR(255) UNIQUE,
 categoria INT(11) NOT NULL,
+motivoAlta VARCHAR(255),
 fechaAlta DATETIME DEFAULT NOW(),
 fechaBaja DATETIME DEFAULT NULL,
+precio DOUBLE NOT NULL,
+proveedor VARCHAR(255),
 id_aula INT (11) NOT NULL,
 
 FOREIGN KEY (categoria) REFERENCES categoria(id),
@@ -98,7 +99,7 @@ FOREIGN KEY (id_aula) REFERENCES aula(id)
 
 CREATE TABLE etiqueta(
 id INT (11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-id_objeto INT (11) NOT NULL,
+id_objeto INT (11),
 
 FOREIGN KEY (id_objeto) REFERENCES objeto(id)
 
@@ -138,7 +139,7 @@ fecha DATETIME NOT NULL
 CREATE TABLE inventario_objeto(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 id_inventario INTEGER NOT NULL,
-id_objeto INTEGER NOT NULL,
+id_objeto INTEGER NOT NULL UNIQUE,
 id_aula INTEGER NOT NULL,
 id_usuario INTEGER NOT NULL,
 fechaRegistro DATETIME NOT NULL,
