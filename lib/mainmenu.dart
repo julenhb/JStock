@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_jhb/itemsearch.dart';
 import 'package:tfg_jhb/main.dart';
 import 'package:tfg_jhb/scantag.dart';
 
@@ -17,7 +18,7 @@ class MainMenu extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Abrir pantalla de búsqueda
-                Navigator.pushNamed(context, '/buscar');
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ItemSearch()));
               },
               child: Text('Buscar objeto'),
             ),
