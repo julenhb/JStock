@@ -78,6 +78,12 @@ num_objetos INT DEFAULT 0
 
 );
 
+CREATE TABLE proveedor(
+id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(255) NOT NULL UNIQUE
+
+);
+
 CREATE TABLE objeto(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 nombre VARCHAR (255) NOT NULL,
@@ -91,6 +97,7 @@ precio DOUBLE NOT NULL,
 proveedor VARCHAR(255),
 id_aula INT (11) NOT NULL,
 
+FOREIGN KEY (proveedor) REFERENCES proveedor(nombre),
 FOREIGN KEY (categoria) REFERENCES categoria(id),
 FOREIGN KEY (id_aula) REFERENCES aula(id)
 
