@@ -73,8 +73,7 @@ Lógica:
 
 CREATE TABLE categoria(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-nombre VARCHAR (255) NOT NULL UNIQUE,
-num_objetos INT DEFAULT 0
+nombre VARCHAR (255) NOT NULL UNIQUE
 
 );
 
@@ -105,7 +104,7 @@ FOREIGN KEY (id_aula) REFERENCES aula(id)
 
 
 CREATE TABLE etiqueta(
-id INT (11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+registro INT (11) NOT NULL PRIMARY KEY,
 id_objeto INT (11),
 
 FOREIGN KEY (id_objeto) REFERENCES objeto(id)
