@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tfg_jhb/mainmenu.dart';
-import 'package:tfg_jhb/signIn.dart';
+import 'package:tfg_jhb/pantallas/mainmenu.dart';
+import 'package:tfg_jhb/pantallas/signIn.dart';
 
 void main (){
   runApp(MaterialApp(

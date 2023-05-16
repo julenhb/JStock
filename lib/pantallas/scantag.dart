@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as img;
@@ -46,13 +47,19 @@ class _ScanTagState extends State<ScanTag> {
   @override
   void initState() {
     super.initState();
+    log("Pasa antes de la línea 53");
     _initializeCamera();
+    log("Pasa antes de la línea 54");
   }
 
   void _initializeCamera() async {
-    final camera = await _getCamera();
+    log("PATATAS CON QUESO PATATAS CON QUESOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+    var camera = await _getCamera();
     _controller = CameraController(camera, ResolutionPreset.medium);
+    log(_controller.toString());
     _initializeControllerFuture = _controller.initialize();
+    log("bOBNAOSODFSAFIFAFADF");
+
   }
 
   @override

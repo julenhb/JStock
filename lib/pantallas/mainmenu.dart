@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tfg_jhb/itemsearch.dart';
+import 'package:tfg_jhb/pantallas/itemsearch.dart';
 import 'package:tfg_jhb/main.dart';
-import 'package:tfg_jhb/scantag.dart';
+import 'package:tfg_jhb/pantallas/scantag.dart';
 
 class MainMenu extends StatelessWidget {
   @override

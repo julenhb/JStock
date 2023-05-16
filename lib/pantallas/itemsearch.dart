@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tfg_jhb/scantag.dart';
+import 'package:tfg_jhb/pantallas/scantag.dart';
 
 class ItemSearch extends StatelessWidget {
 
@@ -43,8 +43,13 @@ class ItemSearch extends StatelessWidget {
   Widget build(BuildContext context) {
 
     bool hideFloor = true;      //PARA ESCONDER EL DDButton DE LAS PLANTAS HASTA QUE NO SE SELECCIONE UN ALA
-    bool hideRoom = true;       //PARA ESCONDER EL DDButton DE LAS AULAS HASTA QUE NO SE SELECCIONES UNA PLANTA
-    bool hideIButton = true;    //PARA ESCONDER EL BOTÓN QUE NOS LLEVA AL INVENTARIO HASTA QUE NO SE HAYA SELECCIONADO EL AULA
+    bool hideRoom = true;       //PARA ESCONDER EL DDButton DE LAS AULAS HASTA QUE NO SE SELECCIONE UNA PLANTA
+    bool hideMap = true;       //PARA ESCONDER EL BOTÓN QUE LLEVA AL MAPA ANTES DE QUE SE SELECCIONE UNA PLANTA
+    bool hideStock = true;    //PARA ESCONDER EL BOTÓN QUE NOS LLEVA AL INVENTARIO HASTA QUE NO SE HAYA SELECCIONADO EL AULA
+
+    String selectedAla = 'Seleccionar';
+    String selectedPlanta = 'Seleccionar';
+    String selectedAula = 'Seleccionar';
 
     return Scaffold(
       backgroundColor: Colors.blue,
@@ -54,27 +59,35 @@ class ItemSearch extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-            margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.15),
+            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+            margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.25),
             width: double.infinity,
-            height: 550,
+            height: 450,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50))
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('Selecciona un ala', style: TextStyle(fontSize: 20),),
-                DropdownButton(
+                DropdownButton (
                   value: 'Seleccionar',
                   items: buildDropdownMenuItems(listaAlas),
-                  onChanged: (value){},
+                  onChanged: (value){
+                    if(value != ('Seleccionar')){
+                      hideFloor = false;
+                    }
+                  },
                 ),
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Text('Selecciona una planta', style: TextStyle(fontSize: 20),),
+                    Text(
+                      'Selecciona una planta',
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       color: Colors.red,
                       icon: Icon(Icons.location_on),
@@ -87,9 +100,14 @@ class ItemSearch extends StatelessWidget {
                 DropdownButton(
                   value: 'Seleccionar',
                   items: buildDropdownMenuItems(listaPlantas),
+                  disabledHint: Text('Seleccionar', style: TextStyle(color: Colors.grey),),
                   onChanged: (value) {},
                 ),
-                Text('Selecciona un aula', style: TextStyle(fontSize: 20),),
+                SizedBox(height: 20),
+                Text(
+                  'Selecciona un aula',
+                  style: TextStyle(fontSize: 20),
+                ),
                 DropdownButton(
                   value: 'Seleccionar',
                   items: buildDropdownMenuItems(listaAulas),
@@ -98,22 +116,14 @@ class ItemSearch extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            bottom: 100,
-            left: 20,
-            right: 20,
-            child: ElevatedButton(
-              onPressed: () {
-               // Navigator.push(context,
-                //    MaterialPageRoute(builder: (context) => Inventario()));
-              },
-              child: Text('Ver inventario del aula seleccionada'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-            ),
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
+        child: Icon(Icons.arrow_forward),
+        onPressed: () {
+          // NOS TIENE QUE LLEVAR A LA PANTALLA DE INVENTARIO DEL AULA SELECCIONADA
+        },
       ),
     );
   }
