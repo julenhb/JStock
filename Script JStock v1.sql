@@ -71,11 +71,12 @@ Lógica:
 
 */
 
+/*
 CREATE TABLE categoria(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 nombre VARCHAR (255) NOT NULL UNIQUE
 
-);
+);*/
 
 CREATE TABLE proveedor(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -88,23 +89,22 @@ id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 nombre VARCHAR (255) NOT NULL,
 descripcion VARCHAR (255) NOT NULL,
 num_serie VARCHAR(255) UNIQUE,
-categoria INT(11) NOT NULL,
 motivoAlta VARCHAR(255),
 fechaAlta DATETIME DEFAULT NOW(),
+baja BOOLEAN,
 fechaBaja DATETIME DEFAULT NULL,
 precio DOUBLE NOT NULL,
 proveedor VARCHAR(255),
 id_aula INT (11) NOT NULL,
 
 FOREIGN KEY (proveedor) REFERENCES proveedor(nombre),
-FOREIGN KEY (categoria) REFERENCES categoria(id),
 FOREIGN KEY (id_aula) REFERENCES aula(id)
 
 );
 
 
 CREATE TABLE etiqueta(
-registro INT (11) NOT NULL PRIMARY KEY,
+registro VARCHAR (255) NOT NULL PRIMARY KEY,
 id_objeto INT (11),
 
 FOREIGN KEY (id_objeto) REFERENCES objeto(id)
@@ -137,7 +137,8 @@ activo BOOLEAN DEFAULT TRUE
 CREATE TABLE inventario(
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 nombre VARCHAR(80) NOT NULL,
-fecha DATETIME NOT NULL
+fecha DATETIME NOT NULL,
+cerrado BOOLEAN
 
 );
 
@@ -160,7 +161,6 @@ FOREIGN KEY (id_aula) REFERENCES aula(id)
 DESCRIBE ala;
 DESCRIBE planta;
 DESCRIBE aula;
-DESCRIBE categoria;
 DESCRIBE etiqueta;
 DESCRIBE objeto;
 DESCRIBE inventario;
@@ -170,7 +170,6 @@ DESCRIBE usuario;
 SELECT*FROM ala;
 SELECT*FROM planta;
 SELECT*FROM aula;
-SELECT*FROM categoria;
 SELECT*FROM etiqueta;
 SELECT*FROM objeto;
 SELECT*FROM inventario;
