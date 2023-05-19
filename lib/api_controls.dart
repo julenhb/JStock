@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:http/http.dart' as http;
 import 'package:tfg_jhb/entity/aula.dart';
 import 'package:tfg_jhb/entity/inventario.dart';
@@ -69,7 +71,7 @@ class ApiControls{
 
   //Obtener un usuario por su nickname: si no hay un usuario con ese nickname, devuelve un usuario genérico, se coge el id = 0 y ahí habría que establecer la lógica del fallo del login
   static Future<Usuario> getUsuarioByNickname(String nickname) async{
-    final response = await http.get(Uri.parse('$apiUrl/user/{$nickname}'));
+    final response = await http.get(Uri.parse('$apiUrl/user/$nickname'));
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body);
@@ -83,25 +85,23 @@ class ApiControls{
   //Comprobación del login:
   //La respuesta a esta solicitud devuelve un json 'respuesta', con valor true o false, por lo tanto el método debe devolver un tipo boolean
   static Future<bool> checkLogin(String nickname, String pwd) async{
-    final response = await http.get(Uri.parse('$apiUrl/user/login/{$nickname}/{$pwd}'));      //enviamos el nickname y la contraseña
+    final response = await http.get(Uri.parse('$apiUrl/user/login/$nickname/$pwd'));      //enviamos el nickname y la contraseña
+    final respues = <dynamic>[];
 
     if(response.statusCode == 200){                               //CASO CORRECTO
       final jsonData = jsonDecode(response.body);
-      final respuesta = jsonData['respuesta'] as bool?;           //Otenemos la respuesta
-      return respuesta ?? false;                                  //las interrogaciones es por control de nulos
+      final resultado = jsonData[0]; //Otenemos la respuesta
+
+      return resultado['resultado'];//las interrogaciones es por control de nulos
     } else{
       throw Exception('Error: No se pudo verificar el inicio de sesión');
     }
   }
 
 
-
-
-  //POST
-
   //Registro de un nuevo usuario
   static Future<Usuario> signUp(String nickname, String pwd) async{
-    final response = await http.post(Uri.parse('$apiUrl/user/signup/{$nickname}/{$pwd}'));  //creo el usuario en BD con el post
+    final response = await http.get(Uri.parse('$apiUrl/user/signup/{$nickname}/{$pwd}'));  //creo el usuario en BD con el post
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body);                     //recupero el usuario creado

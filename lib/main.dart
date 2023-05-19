@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_jhb/entity/usuario.dart';
+import 'package:tfg_jhb/pantallas/login.dart';
 import 'package:tfg_jhb/pantallas/mainmenu.dart';
 import 'package:tfg_jhb/pantallas/signIn.dart';
+import 'package:http/http.dart';
+import 'package:tfg_jhb/api_controls.dart';
 
 void main (){
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: LoginPage(),
+    routes: {
+      '/checkLoginPage': (context) => CheckLoginPage(),
+      '/mainMenu': (context) => MainMenu(),
+    },
   ));
 }
 
@@ -18,6 +26,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool hide = true;
+  TextEditingController nick = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,11 +35,11 @@ class _LoginPageState extends State<LoginPage> {
       body:Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30, left: 20),
+            padding: const EdgeInsets.only(top: 50, left: 20),
             child: Text("Bienvenido \nde nuevo", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.w300),),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
             margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.45),
             width: double.infinity,
             height: 450,
@@ -42,37 +52,28 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text("Inicia sesión",style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),),
                   SizedBox(height: 15,),
-                  TextField(
+                  TextField (
+                    controller: nick,
                     decoration: InputDecoration(
-                      hintText: "Dirección de correo electrónico",
-
+                      hintText: "Nickname (jhberja, chema, jose...)",
                     ),
                   ), //EMAIL
-                  SizedBox(height: 15,),
-                  TextField(
-                      obscureText: hide,
-                    decoration: InputDecoration(
-                      hintText: "Contraseña",
-                      suffixIcon: IconButton(onPressed: (){
-                        setState(() {
-                          hide = !hide;
-                        });
-                      }, icon:hide?Icon(Icons.visibility_off):Icon(Icons.visibility),)
-                    ),
-                  ), //CONTRASEÑA
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(onPressed: (){}, child: Text("¿Olvidaste tu contraseña?"),),
-                  ),
                   Center(
                     child: ElevatedButton(
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.amber,
                           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 60) //así se ha alargado el botón
                         ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>MainMenu()));
-                        }, child: Text("Iniciar sesión")), //Botón para enviar el formulario, default login
+                        onPressed: () async {
+                          var usu = await ApiControls.getUsuarioByNickname(nick.text.toString());
+
+                          if(usu.id !=0){
+                            Navigator.pushNamed(context, '/checkLoginPage', arguments: usu);
+                          }
+                          //Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckLoginPage()));
+                        },
+                        child:
+                          Text("Siguiente")), //Botón para enviar el formulario, default login
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

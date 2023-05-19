@@ -12,7 +12,9 @@ class Ala{
     this.nombre = nombre;
   }
 
+
   factory Ala.fromJson(Map<String, dynamic> json){          //RECOGOJO EL JSON DE LA API Y LO MAPEO
     return Ala(id: json['id'], nombre: json['nombre']);
   }
+
 }

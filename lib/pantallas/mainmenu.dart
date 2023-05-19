@@ -3,9 +3,14 @@ import 'package:tfg_jhb/pantallas/itemsearch.dart';
 import 'package:tfg_jhb/main.dart';
 import 'package:tfg_jhb/pantallas/scantag.dart';
 
+import '../entity/usuario.dart';
+
 class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final usu = ModalRoute.of(context)!.settings.arguments as Usuario;
+    print(usu.nombre);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Menú principal'),
