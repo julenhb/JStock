@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_jhb/entity/inventario.dart';
 import 'package:tfg_jhb/entity/usuario.dart';
+import 'package:tfg_jhb/pantallas/itemsearch.dart';
 import 'package:tfg_jhb/pantallas/login.dart';
 import 'package:tfg_jhb/pantallas/mainmenu.dart';
-import 'package:tfg_jhb/pantallas/signIn.dart';
+import 'package:tfg_jhb/pantallas/room_item_search.dart';
+import 'package:tfg_jhb/pantallas/signUp.dart';
 import 'package:http/http.dart';
 import 'package:tfg_jhb/api_controls.dart';
+import 'package:tfg_jhb/pantallas/usersignup.dart';
+
+import 'entity/planta.dart';
 
 void main (){
   runApp(MaterialApp(
@@ -12,7 +18,12 @@ void main (){
     home: LoginPage(),
     routes: {
       '/checkLoginPage': (context) => CheckLoginPage(),
+      '/userSignUpPage': (context) => UserSignUpPage(),
+      '/signUpPage': (context) => RegistroPage(),
       '/mainMenu': (context) => MainMenu(),
+      '/itemSearch': (context) => ItemSearch(),
+      '/roomItemSearch': (context) => RoomItemSearch(),
+      //'/inventario': (context) => Inventario(),
     },
   ));
 }
@@ -68,9 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                           var usu = await ApiControls.getUsuarioByNickname(nick.text.toString());
 
                           if(usu.id !=0){
-                            Navigator.pushNamed(context, '/checkLoginPage', arguments: usu);
+                            Navigator.pushNamed(context, '/checkLoginPage', arguments: usu); //ASÍ NOS MOVEMOS ENTRE PANTALLAS PARA LLEVAR OBJETOS
                           }
-                          //Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckLoginPage()));
                         },
                         child:
                           Text("Siguiente")), //Botón para enviar el formulario, default login
@@ -80,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Text("¿No estás registrado todavía?"),
                       TextButton(onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> RegistroPage()));
+                        Navigator.pushNamed(context, '/userSignUpPage');
                       }, child: Text("Regístrate"))
                     ],
                   )

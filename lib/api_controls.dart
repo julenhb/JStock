@@ -56,6 +56,18 @@ class ApiControls{
     }
   }
 
+  static Future<List<Aula>> getAulasByPlanta(int idPlanta) async{
+    final response = await http.get(Uri.parse('$apiUrl/aulas/find/$idPlanta'));
+
+    if(response.statusCode == 200){
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
+      final aulas = jsonData.map((item) => Aula.fromJson(item)).toList();
+      return aulas;
+    } else{
+      throw Exception('Error al obtener las alas');
+    }
+  }
+
   //Obtenemos todos los inventarios
   static Future<List<Inventario>> getAllInventarios() async{
     final response = await http.get(Uri.parse('$apiUrl/inventarios/all'));
@@ -101,7 +113,7 @@ class ApiControls{
 
   //Registro de un nuevo usuario
   static Future<Usuario> signUp(String nickname, String pwd) async{
-    final response = await http.get(Uri.parse('$apiUrl/user/signup/{$nickname}/{$pwd}'));  //creo el usuario en BD con el post
+    final response = await http.get(Uri.parse('$apiUrl/user/singup/$nickname/$pwd'));  //creo el usuario en BD con el post
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body);                     //recupero el usuario creado

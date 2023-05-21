@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_jhb/api_controls.dart';
 import 'package:tfg_jhb/main.dart';
 
 import 'mainmenu.dart';
@@ -11,12 +12,35 @@ class RegistroPage extends StatefulWidget {
 }
 
 class _RegistroPageState extends State<RegistroPage> {
+
   bool hide = true;
   TextEditingController password = TextEditingController();
   TextEditingController confPassword = TextEditingController();
+  bool passwordsMatch = true;
+
+  @override
+  void initState() {
+    super.initState();
+    confPassword.addListener(checkPasswordsMatch);
+  }
+
+  @override
+  void dispose() {
+    confPassword.removeListener(checkPasswordsMatch);
+    password.dispose();
+    confPassword.dispose();
+    super.dispose();
+  }
+
+  void checkPasswordsMatch() {
+    setState(() {
+      passwordsMatch = password.text == confPassword.text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final nickname = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: Colors.blue,
       body: SizedBox(
@@ -28,7 +52,7 @@ class _RegistroPageState extends State<RegistroPage> {
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 40),
               child: Text(
-                "Siempre es bueno \n recibir nuevos \n miembros",
+                "Selecciona una contraseña \nsegura",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 40,
@@ -44,6 +68,7 @@ class _RegistroPageState extends State<RegistroPage> {
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.17),
                   width: double.infinity,
+                  height: 394,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50)),
@@ -52,19 +77,13 @@ class _RegistroPageState extends State<RegistroPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Únete",style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),),
-                        SizedBox(height: 15,),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: "Dirección de correo electrónico",
-                          ),
-                        ), //EMAIL
+                        Text("Contraseña",style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),), //EMAIL
                         SizedBox(height: 15,),
                         TextField(
                           controller: password,
                           obscureText: hide,
                           decoration: InputDecoration(
-                            hintText: "Contraseña",
+                            hintText: "1234ñ!*",
                             suffixIcon: IconButton(
                               onPressed: (){
                                 setState(() {
@@ -90,36 +109,31 @@ class _RegistroPageState extends State<RegistroPage> {
                               icon:hide?Icon(Icons.visibility_off):Icon(Icons.visibility),
                             ),
                           ),
-                        ), //Confirmar CONTRASEÑA
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: (){},
-                            child: Text("¿Olvidaste tu contraseña?"),
-                          ),
                         ),
+                        if (!passwordsMatch)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "Las contraseñas no coinciden",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),//Confirmar CONTRASEÑA
                         Center(
                           child: ElevatedButton(
+                            child: Text("Registrarse"), //Botón para enviar el formulario, default login
                             style: TextButton.styleFrom(
                               backgroundColor: Colors.amber,
                               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 60), //así se ha alargado el botón
                             ),
-                            onPressed: (){
-                              if(password.text != confPassword.text){
-                                showDialog(
-                                  context: context,
-                                  builder: (context){
-                                    return AlertDialog(
-                                      title: Text("Mensajes"),
-                                      content: Text("Las contraseñas no coinciden"),
-                                    );
-                                  },
-                                );
-                              }else{
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MainMenu()));
+                            onPressed: passwordsMatch? () async{
+                              if(password.text.toString().isEmpty || confPassword.text.toString().isEmpty){
+
+                              } else {
+                                var usu = await ApiControls.signUp(nickname, confPassword.text.toString());
+                                Navigator.pushNamed(context, 'mainMenu', arguments: usu);
+                                }
                               }
-                            },
-                            child: Text("Registrarse"), //Botón para enviar el formulario, default login
+                                : null, //con esto se deshabilita el botón de registro si las contraseñas no coinciden
                           ),
                         ),
                         Container(

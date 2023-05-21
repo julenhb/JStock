@@ -8,8 +8,8 @@ import '../entity/usuario.dart';
 class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final usu = ModalRoute.of(context)!.settings.arguments as Usuario;
-    print(usu.nombre);
+    //final usu = ModalRoute.of(context)!.settings.arguments as Usuario;
+    final usu = Usuario.fromParameters(24332, "julen", "Julen", "1234567890", false, false);
 
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +23,7 @@ class MainMenu extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Abrir pantalla de búsqueda
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ItemSearch()));
+                Navigator.pushNamed(context, '/itemSearch', arguments: usu);
               },
               child: Text('Buscar objeto'),
             ),
@@ -33,7 +33,7 @@ class MainMenu extends StatelessWidget {
                 Navigator.pushNamed(context, '/inventario');
               },
               child: Text('Ver inventario'),
-            ),
+            ),/*
             InkWell(
               onTap: () {
                 // Abrir pantalla de escaneo
@@ -63,7 +63,7 @@ class MainMenu extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
+            ),*/
           ],
         ),
       ),

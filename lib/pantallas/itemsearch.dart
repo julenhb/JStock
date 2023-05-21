@@ -1,60 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_jhb/api_controls.dart';
 import 'package:tfg_jhb/pantallas/scantag.dart';
 
-class ItemSearch extends StatelessWidget {
+import '../entity/ala.dart';
+import '../entity/planta.dart';
 
-  List<String> listaAlas = [];                  //VAMOS A CREAR ESTAS LISTAS PARA CADA UNA DE LAS OCURRENCIAS DE ESTAS TRES TABLAS
-  List<String> listaPlantas = [];
-  List<String> listaAulas = [];
+class ItemSearch extends StatefulWidget {
+  @override
+  _ItemSearchState createState() => _ItemSearchState();
+}
 
-                                              //EN LA VERSIÓN FINAL SE DEBERÁ RELLENAR A TRAVÉS DE LA API, PERO PARA PROBAR EL FUNCIONAMIENTO
-                                              //SETEAREMOS VALORES POR DEFECTO DIRECTAMENBTE
-  ItemSearch(){
-    listaAlas.addAll(['Ala Izquierda', 'Ala Derecha']);
-    listaPlantas.addAll(['Planta 1', 'Planta 2', 'Planta 3']);
-    listaAulas.addAll(['Aula 0', 'Aula 1', 'Aula 2', 'Aula 3', 'Aula 4', 'Aula 5', 'Aula 6', 'Aula 7', 'Aula 8']);
+class _ItemSearchState extends State<ItemSearch> {
+  List<Ala> alas = [];
+  List<DropdownMenuItem<String>> alaItems = [];
+  String selectedAla = 'Seleccionar';
+
+  List<Planta> plantas = [];
+  List<DropdownMenuItem<String>> plantaItems = [];
+  late String selectedPlanta = "Seleccionar";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAlaData();
+    fetchPlantaData();
   }
 
+  Future<void> fetchAlaData() async {                       //LLENAMOS EL DROPDOWN DE LAS ALAS
+    final fetchedAlas = await ApiControls.getAllAlas();     //Obtenemos todas las alas desde la API
+    setState(() {
+      alas = fetchedAlas;
+      alaItems = buildDropdownAla();                        //Utilizamos el método que llena de valores el dropdown
+    });
+  }
 
-  //CÓMO VOY A MANEJAR MÁS DE UN DropDown ITEM, LO QUE VOY A HACER PARA DIFERENCIARLOS ES METERLOS EN UN MÉTODO CON LISTAS CON OBJETOS
-  // DE ESE TIPO DE ITEMS, DE MANERA QUE ASÍ ABAJO SÓLO TENGO QUE LLAMARLOS POR EL NOMBRE QUE LES DOY AQUÍ
-
-  List<DropdownMenuItem<String>> buildDropdownMenuItems(List<String> items){
-    List<DropdownMenuItem<String>> menuItems = [];
-    menuItems.add(
+  List<DropdownMenuItem<String>> buildDropdownAla() {
+    List<DropdownMenuItem<String>> items = [];
+    items.add(              //Añadimos el valor por defecto, si no da error
       DropdownMenuItem(
-        value: 'Seleccionar',
-        child: Text('Seleccionar'),
+        value: "Seleccionar",
+        child: Text("Seleccionar"),
       ),
     );
-    for (String item in items){
-      menuItems.add(
+    for (Ala ala in alas) {          //a partir de la Lista de alas obtemos los nombres para llenar el dropdown
+      items.add(
         DropdownMenuItem(
-          value: item,
-          child: Text(item),
+          value: ala.nombre,
+          child: Text(ala.nombre),
         ),
       );
     }
-    return menuItems;
+    return items;  //devolvemos la lista que contendrá los valores del dropdown
   }
+
+
+  Future<void> fetchPlantaData() async {
+    final fetchedPlantas = await ApiControls.getAllPlantas();
+    plantaItems = buildDropdownPlanta(selectedAla); // Relleno los elementos del segundo DropdownButton
+    setState(() {
+      plantas = fetchedPlantas;
+    });
+  }
+
+  // Listener del primer DropdownButton, lo llamos en el metodo onChanged del primero
+  void onAlaSelected(String value) {
+    setState(() {
+      selectedAla = value;
+      selectedPlanta = "Seleccionar";
+    });
+    fetchPlantaData(); // Obtener y actualizar los datos de las plantas según el ala seleccionada
+  }
+
+
+  List<DropdownMenuItem<String>> buildDropdownPlanta(String alaNombre) {      //Construyo el dropdown de las plantas a través del valor seleccionado en el de las Alas
+    List<DropdownMenuItem<String>> items = [];
+    Ala ala = alas.firstWhere((element) => element.nombre == alaNombre, orElse: () => Ala());      //creo un objeto ala buscando en la lista de alas una instancia con el mismo nombre que el que envío al método
+    items.add(
+      DropdownMenuItem(
+        value: "Seleccionar",
+        child: Text("Seleccionar"),
+      ),
+    );
+    for (Planta planta in plantas) {
+      if (ala.id == planta.idAla) {      //lleno el dropdown con las plantas que pertenecen a las alas seleccionadas
+        items.add(
+          DropdownMenuItem(
+            value: planta.nombre,
+            child: Text(planta.nombre),
+          ),
+        );
+      }
+    }
+      return items;
+    }
 
 
   @override
   Widget build(BuildContext context) {
 
-    bool hideFloor = true;      //PARA ESCONDER EL DDButton DE LAS PLANTAS HASTA QUE NO SE SELECCIONE UN ALA
-    bool hideRoom = true;       //PARA ESCONDER EL DDButton DE LAS AULAS HASTA QUE NO SE SELECCIONE UNA PLANTA
-    bool hideMap = true;       //PARA ESCONDER EL BOTÓN QUE LLEVA AL MAPA ANTES DE QUE SE SELECCIONE UNA PLANTA
-    bool hideStock = true;    //PARA ESCONDER EL BOTÓN QUE NOS LLEVA AL INVENTARIO HASTA QUE NO SE HAYA SELECCIONADO EL AULA
-
-    String selectedAla = 'Seleccionar';
-    String selectedPlanta = 'Seleccionar';
-    String selectedAula = 'Seleccionar';
-
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.red,
       appBar: AppBar(
         title: Text('Búsqueda de objetos'),
+        backgroundColor: Colors.redAccent,
       ),
       body: Stack(
         children: [
@@ -69,49 +117,43 @@ class ItemSearch extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('Selecciona un ala', style: TextStyle(fontSize: 20),),
-                DropdownButton (
-                  value: 'Seleccionar',
-                  items: buildDropdownMenuItems(listaAlas),
-                  onChanged: (value){
-                    if(value != ('Seleccionar')){
-                      hideFloor = false;
-                    }
-                  },
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10), // Ajusta el valor según tus necesidades
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Selecciona un ala', style: TextStyle(fontSize: 20)),
+                      DropdownButton(
+                        value: selectedAla,
+                        items: alaItems,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedAla = value as String;
+                            onAlaSelected(selectedAla);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Text(
-                      'Selecciona una planta',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    IconButton(
-                      color: Colors.red,
-                      icon: Icon(Icons.location_on),
-                      onPressed: () {
-                        // NOS TIENE QUE LLEVAR A LA PANTALLA DE LOS MAPAS
-                      },
-                    ),
-                  ],
-                ),
-                DropdownButton(
-                  value: 'Seleccionar',
-                  items: buildDropdownMenuItems(listaPlantas),
-                  disabledHint: Text('Seleccionar', style: TextStyle(color: Colors.grey),),
-                  onChanged: (value) {},
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Selecciona un aula',
-                  style: TextStyle(fontSize: 20),
-                ),
-                DropdownButton(
-                  value: 'Seleccionar',
-                  items: buildDropdownMenuItems(listaAulas),
-                  onChanged: (value) {},
+                Padding(
+                  padding: EdgeInsets.only(top: 60), // Ajusta el valor según tus necesidades
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Selecciona una planta', style: TextStyle(fontSize: 20)),
+                      DropdownButton(
+                        value: selectedPlanta,
+                        items: plantaItems,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPlanta = value as String;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -122,7 +164,13 @@ class ItemSearch extends StatelessWidget {
         backgroundColor: Colors.red,
         child: Icon(Icons.arrow_forward),
         onPressed: () {
-          // NOS TIENE QUE LLEVAR A LA PANTALLA DE INVENTARIO DEL AULA SELECCIONADA
+          final planta = plantas.firstWhere((element) => element.nombre == selectedPlanta, orElse: () => Planta());
+          if(planta.id != 0) {
+            Navigator.pushNamed(context, '/roomItemSearch', arguments: planta);
+          }
+          else{
+            print(planta.id);
+          }
         },
       ),
     );

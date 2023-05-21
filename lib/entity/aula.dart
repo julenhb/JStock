@@ -19,7 +19,7 @@ class Aula{
   }
 
   factory Aula.fromJson(Map<String, dynamic> json){
-    return Aula(id: json['id'], nombre: json['nombre'], idPlanta: json['idPlanta'], numObjetos: json['numObjetos']);
+    return Aula(id: json['id'], nombre: json['nombre']);
   }
 
 }
