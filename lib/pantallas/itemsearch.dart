@@ -3,7 +3,9 @@ import 'package:tfg_jhb/api_controls.dart';
 import 'package:tfg_jhb/pantallas/scantag.dart';
 
 import '../entity/ala.dart';
+import '../entity/inventario.dart';
 import '../entity/planta.dart';
+import '../entity/usuario.dart';
 
 class ItemSearch extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class ItemSearch extends StatefulWidget {
 }
 
 class _ItemSearchState extends State<ItemSearch> {
+
   List<Ala> alas = [];
   List<DropdownMenuItem<String>> alaItems = [];
   String selectedAla = 'Seleccionar';
@@ -97,6 +100,12 @@ class _ItemSearchState extends State<ItemSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    Usuario usuario = bundle[0];
+    Inventario inventario = bundle[1];
+
+    print(usuario.nombre);
+    print(inventario.nombre.toString());
 
     return Scaffold(
       backgroundColor: Colors.red,
@@ -166,7 +175,9 @@ class _ItemSearchState extends State<ItemSearch> {
         onPressed: () {
           final planta = plantas.firstWhere((element) => element.nombre == selectedPlanta, orElse: () => Planta());
           if(planta.id != 0) {
-            Navigator.pushNamed(context, '/roomItemSearch', arguments: planta);
+            List<dynamic> paquete = bundle;
+            paquete.add(planta);
+            Navigator.pushNamed(context, '/roomItemSearch', arguments: paquete);
           }
           else{
             print(planta.id);

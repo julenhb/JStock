@@ -80,6 +80,18 @@ class ApiControls{
       throw Exception('Error al obtener las alas');
     }
   }
+/*
+  static Future<List<Inventario>> getAllUsuarios() async{
+    final response = await http.get(Uri.parse('$apiUrl/user'));
+
+    if(response.statusCode == 200){
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
+      final inventarios = jsonData.map((item) => Inventario.fromJson(item)).toList();
+      return inventarios;
+    } else{
+      throw Exception('Error al obtener las alas');
+    }
+  }*/
 
   //Obtener un usuario por su nickname: si no hay un usuario con ese nickname, devuelve un usuario genérico, se coge el id = 0 y ahí habría que establecer la lógica del fallo del login
   static Future<Usuario> getUsuarioByNickname(String nickname) async{
@@ -87,7 +99,7 @@ class ApiControls{
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body);
-      final usuario = Usuario.fromJson(jsonData);
+      final usuario = Usuario.fromJsonById(jsonData);
       return usuario;
     } else{
       throw Exception('Error: No se pudo obtener el usuario');
@@ -121,6 +133,30 @@ class ApiControls{
       return usuario;
     } else{
       throw Exception('Error: no se pudo proceder al registro del nuevo usuario');
+    }
+  }
+
+  static Future<List<Objeto>> getoObjetosByRoomStock(int idInventario, idAula) async{
+    final response = await http.get(Uri.parse('$apiUrl/objeto/find/$idInventario/$idAula'));
+
+    if(response.statusCode == 200){
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
+      final objetos = jsonData.map((item) => Objeto.fromJson(item)).toList();
+      return objetos;
+    } else{
+      throw Exception('Error al obtener las alas');
+    }
+  }
+
+  static Future<List<Objeto>> getObjetosAllIn(int idInventario) async{
+    final response = await http.get(Uri.parse('$apiUrl/objeto/find/allin/$idInventario'));
+
+    if(response.statusCode == 200){
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
+      final objetos = jsonData.map((item) => Objeto.fromInventario(item)).toList();
+      return objetos;
+    } else{
+      throw Exception('Error al obtener las alas');
     }
   }
 

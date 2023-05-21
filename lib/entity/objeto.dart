@@ -41,9 +41,17 @@ class Objeto {
     this.idAula = idAula;
   }
 
+  /*
   factory Objeto.fromJson(Map<String, dynamic> json){
     return Objeto(id: json['id'], nombre: json['nombre'], descripcion: json['descripcion'], numSerie: json['numSerie'], categoria: json['categoria'],
         motivoAlta: json['motivoAlta'], fechaAlta: json['fechaAlta'], fechaBaja: json['fechaBaja'], precio: json['precio'], proveedor: json['proveedor'],
         idAula: json['idAula']);
+  }*/
+  factory Objeto.fromJson(Map<String, dynamic> json){
+    return Objeto(id: json['id'], nombre: json['nombre'], numSerie: json['numserie']);
+  }
+
+  factory Objeto.fromInventario(Map<String, dynamic> json){  //PARA EL INVENTARIO GENERAL
+    return Objeto(id: json['id'], nombre: json['nombre']);
   }
 }

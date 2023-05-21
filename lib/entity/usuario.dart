@@ -24,12 +24,11 @@ class Usuario{
     this.activo = activo;
   }
 
-  /*
   factory Usuario.fromJson(Map<String, dynamic> json){
     return Usuario(id: json['id'], nickname: json['nickname'], nombre: json['nombre'], pwd: json['pwd'], admn: json['admn'], activo: json['activo']);
-  }*/
+  }
 
-  factory Usuario.fromJson(List<dynamic> json) {
+  factory Usuario.fromJsonById(List<dynamic> json) {
     final firstItem = json[0];
     return Usuario(
       id: firstItem['id'],

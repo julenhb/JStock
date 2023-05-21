@@ -4,7 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../api_controls.dart';
 import '../entity/aula.dart';
+import '../entity/inventario.dart';
 import '../entity/planta.dart';
+import '../entity/usuario.dart';
 
 class RoomItemSearch extends StatefulWidget {
 
@@ -23,7 +25,15 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    planta = ModalRoute.of(context)!.settings.arguments as Planta;
+    final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    planta = bundle[2];
+    Usuario usuario = bundle[0];
+    Inventario inventario = bundle[1];
+
+    print(usuario.nombre);
+    print(inventario.nombre.toString());
+    print(planta.nombre);
+
     fetchAulaData(planta.id);
 
   }
@@ -58,6 +68,7 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
@@ -100,7 +111,8 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
               ],
             ),
           ),
-          if (aulaItems.isEmpty) // Mostrar el círculo de carga dentro del contenedor
+          if (aulaItems.isEmpty)
+            // Mostrar el círculo de carga dentro del contenedor
             Container(
               width: double.infinity,
               height: 450,
@@ -117,10 +129,11 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
         backgroundColor: Colors.red,
         child: Icon(Icons.arrow_forward),
         onPressed: () {
-          if (selectedAula == "Seleccionar") {
-            final aula = aulas.firstWhere((element) =>
-            element.nombre == selectedAula, orElse: () => Aula());
-            Navigator.pushNamed(context, 'roomStock', arguments: aula);
+          if (selectedAula != "Seleccionar") {
+            List<dynamic> paquete = bundle;
+            final aula = aulas.firstWhere((element) => element.nombre == selectedAula, orElse: () => Aula());
+            paquete.add(aula);
+            Navigator.pushNamed(context, '/roomStock', arguments: paquete);
           }else{
             print("0");
           }

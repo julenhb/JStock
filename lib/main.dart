@@ -5,6 +5,7 @@ import 'package:tfg_jhb/pantallas/itemsearch.dart';
 import 'package:tfg_jhb/pantallas/login.dart';
 import 'package:tfg_jhb/pantallas/mainmenu.dart';
 import 'package:tfg_jhb/pantallas/room_item_search.dart';
+import 'package:tfg_jhb/pantallas/room_stock.dart';
 import 'package:tfg_jhb/pantallas/signUp.dart';
 import 'package:http/http.dart';
 import 'package:tfg_jhb/api_controls.dart';
@@ -23,6 +24,7 @@ void main (){
       '/mainMenu': (context) => MainMenu(),
       '/itemSearch': (context) => ItemSearch(),
       '/roomItemSearch': (context) => RoomItemSearch(),
+      '/roomStock': (context) => RoomStock(),
       //'/inventario': (context) => Inventario(),
     },
   ));
