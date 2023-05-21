@@ -52,6 +52,6 @@ class Objeto {
   }
 
   factory Objeto.fromInventario(Map<String, dynamic> json){  //PARA EL INVENTARIO GENERAL
-    return Objeto(id: json['id'], nombre: json['nombre']);
+    return Objeto(id: json['id'], nombre: json['nombre'], idAula: json['idAula']);
   }
 }

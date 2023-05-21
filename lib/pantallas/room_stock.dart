@@ -46,21 +46,28 @@ class _RoomStockState extends State<RoomStock> {
         backgroundColor: Colors.redAccent,
       ),
       body: SingleChildScrollView(
-        child: DataTable(
-          columns: [
-            DataColumn(label: Text('Nombre')),
-            DataColumn(label: Text('Nº de Serie')),
-            // Puedes agregar más columnas si es necesario
-          ],
-          rows: objetos.map((objeto) {
-            return DataRow(
-              cells: [
-                DataCell(Text(objeto.nombre)),
-                DataCell(Text(objeto.numSerie))
-                // Puedes agregar más celdas si es necesario
-              ],
-            );
-          }).toList(),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DataTable(
+                columns: [
+                  DataColumn(label: Text('Nombre')),
+                  DataColumn(label: Text('Nº de Serie')),
+                  // Puedes agregar más columnas si es necesario
+                ],
+                rows: objetos.map((objeto) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(objeto.nombre)),
+                      DataCell(Text(objeto.numSerie))
+                      // Puedes agregar más celdas si es necesario
+                    ],
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(

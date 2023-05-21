@@ -130,7 +130,7 @@ class _RegistroPageState extends State<RegistroPage> {
 
                               } else {
                                 var usu = await ApiControls.signUp(nickname, confPassword.text.toString());
-                                Navigator.pushNamed(context, 'mainMenu', arguments: usu);
+                                Navigator.pushNamed(context, '/mainMenu', arguments: usu);
                                 }
                               }
                                 : null, //con esto se deshabilita el botón de registro si las contraseñas no coinciden

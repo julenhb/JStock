@@ -51,8 +51,6 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 60) //así se ha alargado el botón
                         ),
                         onPressed: () async {
-                         /* var uExistente = await ApiControls.getUsuarioByNickname(nick.text.toString());
-
                           if(nick.text.toString().isEmpty){         //CONTROL NICKNAME NULO
                             showDialog(context: context, builder: (context){
                               return AlertDialog(
@@ -61,22 +59,23 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                               );
                             },
                           );
-                          } else if(uExistente.id !=0){        //CONTROL DE USUARIO EXISTENTE
-                              showDialog(context: context, builder: (context){
-                                  return AlertDialog(
-                                    title: Text("Usuario existente"),
-                                    content: Text("El nickname que has elegido ya existe :("),
-                                  );
-                                },
-                              );
-                          } else if (uExistente.id == 0){
-                            var nickname = nick.text.toString();
-                            Navigator.pushNamed(context, 'signUpPage', arguments: nickname);   //ME LLEVO EL NICKNAME PARA USARLO EN EL REGISTRO
-                            print(nickname);
-                          }*/
-                          var nickname = nick.text.toString();
-                          Navigator.pushNamed(context, '/signUpPage', arguments: nickname);   //ME LLEVO EL NICKNAME PARA USARLO EN EL REGISTRO
-                          print(nickname);
+                            } else {
+                              //CONTROL DE USUARIO EXISTENTE
+                              var uExistente = await ApiControls.getUsuarioByNickname(nick.text.toString());
+                              if(uExistente.id != 0) {
+                                showDialog(context: context, builder: (context){
+                                    return AlertDialog(
+                                      title: Text("Usuario existente"),
+                                      content: Text("El nickname que has elegido ya existe :("),
+                                    );
+                                  },
+                                );
+                            } else if (uExistente.id == 0){
+                              var nickname = nick.text.toString();
+                              Navigator.pushNamed(context, '/signUpPage', arguments: nickname);   //ME LLEVO EL NICKNAME PARA USARLO EN EL REGISTRO
+                              print(nickname);
+                            }
+                          }
                         },
                         child:
                         Text("Siguiente")), //Botón para enviar el formulario, default login

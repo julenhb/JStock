@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_jhb/api_controls.dart';
-import 'package:tfg_jhb/pantallas/scantag.dart';
-
 import '../entity/ala.dart';
 import '../entity/inventario.dart';
 import '../entity/planta.dart';

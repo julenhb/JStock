@@ -1,7 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import '../api_controls.dart';
 import '../entity/aula.dart';
 import '../entity/inventario.dart';
@@ -69,6 +66,7 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
   @override
   Widget build(BuildContext context) {
     final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
@@ -94,7 +92,7 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Selecciona un ala', style: TextStyle(fontSize: 20)),
+                      Text('Selecciona un aula', style: TextStyle(fontSize: 20)),
                       SizedBox(height: 10,),
                       DropdownButton(
                         value: selectedAula,

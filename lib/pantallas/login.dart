@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tfg_jhb/api_controls.dart';
 import 'package:tfg_jhb/entity/respuesta.dart';
 import 'package:tfg_jhb/main.dart';
@@ -62,13 +63,13 @@ class _CheckLoginPageState extends State<CheckLoginPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Únete",style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),),
+                            Text("Introduce tu contraseña",style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),),
                             SizedBox(height: 15,),
                             TextField(
                               controller: password,
                               obscureText: hide,
                               decoration: InputDecoration(
-                                hintText: "Contraseña",
+                                hintText: "yoAprobaríaAJulen1234!*",
                                 suffixIcon: IconButton(
                                   onPressed: (){
                                     setState(() {
@@ -90,24 +91,17 @@ class _CheckLoginPageState extends State<CheckLoginPage> {
                                       var usu1 = usu;
                                       Navigator.pushNamed(context, '/mainMenu', arguments: usu1);
                                     }else{
-                                      print("está cascando");
+                                      Fluttertoast.showToast(
+                                        msg: "Contraseña incorrecta",
+                                        toastLength: Toast.LENGTH_SHORT, // Duración del toast (Toast.LENGTH_SHORT o Toast.LENGTH_LONG)
+                                        gravity: ToastGravity.BOTTOM, // Posición del toast (TOP, BOTTOM, CENTER)
+                                        timeInSecForIosWeb: 1, // Duración para iOS y web (en segundos)
+                                        backgroundColor: Colors.grey[800], // Color de fondo del toast
+                                        textColor: Colors.white, // Color del texto del toast
+                                        fontSize: 16.0, // Tamaño de fuente del texto del toast
+                                      );
                                     }
                                   }, child: Text("Iniciar sesión")), //Botón para enviar el formulario, default login
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left:20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("¿Ya tienes una cuenta con nosotros?"),
-                                  TextButton(
-                                    onPressed: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-                                    },
-                                    child: Text("Inicia sesión"),
-                                  ),
-                                ],
-                              ),
                             ),
                           ],
                         ),
