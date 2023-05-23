@@ -126,7 +126,7 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
         child: Icon(Icons.arrow_forward),
-        onPressed: () {
+        onPressed: () async {
           if (selectedAula != "Seleccionar") {
             List<dynamic> paquete = bundle;
             final aula = aulas.firstWhere((element) => element.nombre == selectedAula, orElse: () => Aula());
@@ -134,7 +134,8 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
               paquete.removeAt(3);
             }
             paquete.add(aula);
-            Navigator.pushNamed(context, '/roomStock', arguments: paquete);
+            await Navigator.pushNamed(context, '/roomStock', arguments: paquete);
+            paquete.remove(aula);
           }else{
             print("0");
           }
