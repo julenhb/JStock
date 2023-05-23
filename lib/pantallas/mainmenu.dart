@@ -57,12 +57,22 @@ class _MainMenuState extends State<MainMenu> {
       appBar: AppBar(
         title: Text('Menú principal'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              // Aquí puedes agregar la lógica para manejar el botón de usuario
-              // Por ejemplo, abrir un menú de usuario o realizar alguna acción relacionada
+          PopupMenuButton<String>(
+            color: Colors.yellow,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'cerrar_sesion',
+                child: Text('Cerrar sesión'),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 'cerrar_sesion') {
+                bundle.clear();
+                Navigator.pop(context);
+              }
             },
+            icon: Icon(Icons.person),
+            offset: Offset(0, 48), // Ajusta la posición vertical del menú
           ),
         ],
       ),
@@ -113,6 +123,7 @@ class _MainMenuState extends State<MainMenu> {
                             fontSize: 16.0, // Tamaño de fuente del texto del toast
                           );
                         } else{
+                          bundle.clear();
                           Usuario usu1 = usu;
                           Inventario stock = inventarios.firstWhere((element) => element.nombre == selectedInventario, orElse: () => Inventario());
                           bundle.add(usu1);
@@ -139,6 +150,7 @@ class _MainMenuState extends State<MainMenu> {
                             fontSize: 16.0, // Tamaño de fuente del texto del toast
                           );
                         } else{
+                          bundle.clear();
                           Usuario usu1 = usu;
                           Inventario stock = inventarios.firstWhere((element) => element.nombre == selectedInventario, orElse: () => Inventario());
                           bundle.add(usu1);
@@ -165,11 +177,12 @@ class _MainMenuState extends State<MainMenu> {
                             fontSize: 16.0, // Tamaño de fuente del texto del toast
                           );
                         } else{
+                          bundle.clear();
                           Usuario usu1 = usu;
                           Inventario stock = inventarios.firstWhere((element) => element.nombre == selectedInventario, orElse: () => Inventario());
                           bundle.add(usu1);
                           bundle.add(stock);
-                          Navigator.pushNamed(context, '/scannerTag', arguments: bundle);
+                          Navigator.pushNamed(context, '/scanTag', arguments: bundle);
                         }
                       },
                       child: Text('Scanner'),

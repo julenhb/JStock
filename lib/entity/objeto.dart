@@ -7,7 +7,7 @@ class Objeto {
   late String motivoAlta;
   late DateTime fechaAlta;
   late DateTime fechaBaja;
-  late double precio;
+  late int precio;
   late String proveedor;
   late int idAula;
 
@@ -20,14 +20,14 @@ class Objeto {
     this.motivoAlta = "",
     DateTime? fechaAlta,
     DateTime? fechaBaja,              //En este caso los campos de fechas pueden ser nulos, por lo tanto se utiliza el ?
-    this.precio = 0.0,
+    this.precio = 0,
     this.proveedor = "",
     this.idAula = 0,
   }) : fechaAlta = fechaAlta ?? DateTime.now(),
         fechaBaja = fechaBaja ?? DateTime.now();
 
   Objeto.fromParameters(int id, String nombre, String descripcion, String numSerie, int categoria, String motivoAlta,
-      DateTime fechaAlta, DateTime fechaBaja, double precio, String proveedor, int idAula,) {
+      DateTime fechaAlta, DateTime fechaBaja, int precio, String proveedor, int idAula,) {
     this.id = id;
     this.nombre = nombre;
     this.descripcion = descripcion;
@@ -41,6 +41,15 @@ class Objeto {
     this.idAula = idAula;
   }
 
+  Objeto.fromScan(int id, String nombre, String numserie, int precio, int idAula){
+    this.id = id;
+    this.nombre = nombre;
+    this.numSerie = numserie;
+    this.precio = precio;
+    this.idAula = idAula;
+  }
+
+  //id: json[0], nombre: json[1], numSerie: json[7], precio: json[8], idAula: json[12]
   /*
   factory Objeto.fromJson(Map<String, dynamic> json){
     return Objeto(id: json['id'], nombre: json['nombre'], descripcion: json['descripcion'], numSerie: json['numSerie'], categoria: json['categoria'],
@@ -48,10 +57,10 @@ class Objeto {
         idAula: json['idAula']);
   }*/
   factory Objeto.fromJson(Map<String, dynamic> json){
-    return Objeto(id: json['id'], nombre: json['nombre'], numSerie: json['numserie']);
+    return Objeto(id: json['id'], nombre: json['nombre'], idAula: json['idAula']);
   }
 
   factory Objeto.fromInventario(Map<String, dynamic> json){  //PARA EL INVENTARIO GENERAL
-    return Objeto(id: json['id'], nombre: json['nombre'], idAula: json['idAula']);
+    return Objeto(id: json['id'], nombre: json['nombre'], numSerie:json['numserie'], idAula: json['idAula']);
   }
 }

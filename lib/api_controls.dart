@@ -98,7 +98,6 @@ class ApiControls{
   //La respuesta a esta solicitud devuelve un json 'respuesta', con valor true o false, por lo tanto el método debe devolver un tipo boolean
   static Future<bool> checkLogin(String nickname, String pwd) async{
     final response = await http.get(Uri.parse('$apiUrl/user/login/$nickname/$pwd'));      //enviamos el nickname y la contraseña
-    final respues = <dynamic>[];
 
     if(response.statusCode == 200){                               //CASO CORRECTO
       final jsonData = jsonDecode(response.body);
@@ -129,7 +128,7 @@ class ApiControls{
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body) as List<dynamic>;
-      final objetos = jsonData.map((item) => Objeto.fromJson(item)).toList();
+      final objetos = jsonData.map((item) => Objeto.fromInventario(item)).toList();
       return objetos;
     } else{
       throw Exception('Error al obtener las alas');
@@ -141,7 +140,7 @@ class ApiControls{
 
     if(response.statusCode == 200){
       final jsonData = jsonDecode(response.body) as List<dynamic>;
-      final objetos = jsonData.map((item) => Objeto.fromInventario(item)).toList();
+      final objetos = jsonData.map((item) => Objeto.fromJson(item)).toList();
       return objetos;
     } else{
       throw Exception('Error al obtener las alas');
@@ -157,6 +156,63 @@ class ApiControls{
       return nombres;
     } else{
       throw Exception('Error al obtener las alas');
+    }
+  }
+
+  static Future<Aula> getAulaById(int idAula) async{
+    final response = await http.get(Uri.parse('$apiUrl/aula/find/$idAula'));
+
+    if(response.statusCode == 200){
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
+      final aula = jsonData.map((item) => Aula.fromJson(item)).toList().first;
+      return aula;
+    } else{
+      throw Exception('Error al obtener las alas');
+    }
+  }
+
+  //LECTURA DE UNA ETIQUETA
+  static Future<Objeto> getObjetosByTag(int etiqueta) async {
+    final response = await http.get(
+        Uri.parse('$apiUrl/etiqueta/find/value/$etiqueta'));
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final mapa = json[0] as Map<String, dynamic>;
+      final lista = mapa.entries.map((entry) => entry.value).toList();
+      final objeto = Objeto.fromScan(lista[0], lista[1], lista[7], lista[8], lista[12]);
+
+        return objeto;
+      } else {
+        throw Exception('Error al obtener las alas');
+      }
+    }
+
+    //INVENTARIAR UN OBJETO:
+  static Future<bool> countItem(int idObjeto, int idInventario, int idAula, int idUsuario) async{
+    final response = await http.get(Uri.parse('$apiUrl/objeto/inventario/create/$idObjeto/$idInventario/$idAula/$idUsuario'));
+
+    if(response.statusCode == 200){                               //CASO CORRECTO
+      final jsonData = jsonDecode(response.body);
+      final resultado = jsonData[0]; //Otenemos la respuesta
+
+      return resultado['resultado'];
+    } else{
+      throw Exception('Error: No se pudo realizar el conteo y tampoco verificarlo');
+    }
+  }
+
+  //ACTUALIZAR UN OBJETO:
+  static Future<bool> updateItem(int idObjeto, int idInventario, int idAula, int idUsuario) async{
+    final response = await http.get(Uri.parse('$apiUrl/objeto/inventario/update/$idObjeto/$idInventario/$idAula/$idUsuario'));
+
+    if(response.statusCode == 200){                               //CASO CORRECTO
+      final jsonData = jsonDecode(response.body);
+      final resultado = jsonData[0]; //Otenemos la respuesta
+
+      return resultado['resultado'];
+    } else{
+      throw Exception('Error: No se pudo realizar el conteo y tampoco verificarlo');
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tfg_jhb/api_controls.dart';
 import 'package:tfg_jhb/main.dart';
 
@@ -127,10 +128,11 @@ class _RegistroPageState extends State<RegistroPage> {
                             ),
                             onPressed: passwordsMatch? () async{
                               if(password.text.toString().isEmpty || confPassword.text.toString().isEmpty){
-
+                                Fluttertoast.showToast(msg: "No puedes dejar campos vacíos");
                               } else {
                                 var usu = await ApiControls.signUp(nickname, confPassword.text.toString());
-                                Navigator.pushNamed(context, '/mainMenu', arguments: usu);
+                                await Navigator.pushNamed(context, '/mainMenu', arguments: usu);
+                                Navigator.pop(context);
                                 }
                               }
                                 : null, //con esto se deshabilita el botón de registro si las contraseñas no coinciden

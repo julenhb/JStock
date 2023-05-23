@@ -72,7 +72,8 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                                 );
                             } else if (uExistente.id == 0){
                               var nickname = nick.text.toString();
-                              Navigator.pushNamed(context, '/signUpPage', arguments: nickname);   //ME LLEVO EL NICKNAME PARA USARLO EN EL REGISTRO
+                              await Navigator.pushNamed(context, '/signUpPage', arguments: nickname);   //ME LLEVO EL NICKNAME PARA USARLO EN EL REGISTRO
+                              Navigator.pop(context);
                               print(nickname);
                             }
                           }

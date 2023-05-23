@@ -87,10 +87,7 @@ class _CheckLoginPageState extends State<CheckLoginPage> {
                                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 60) //así se ha alargado el botón
                                   ),
                                   onPressed: () async {
-                                    if (await ApiControls.checkLogin(usu.nickname.toString(), password.text.toString()) == true){
-                                      var usu1 = usu;
-                                      Navigator.pushNamed(context, '/mainMenu', arguments: usu1);
-                                    }else{
+                                    if(password.text.toString().isEmpty){
                                       Fluttertoast.showToast(
                                         msg: "Contraseña incorrecta",
                                         toastLength: Toast.LENGTH_SHORT, // Duración del toast (Toast.LENGTH_SHORT o Toast.LENGTH_LONG)
@@ -100,6 +97,25 @@ class _CheckLoginPageState extends State<CheckLoginPage> {
                                         textColor: Colors.white, // Color del texto del toast
                                         fontSize: 16.0, // Tamaño de fuente del texto del toast
                                       );
+                                    }else {
+                                      if (await ApiControls.checkLogin(
+                                          usu.nickname.toString(),
+                                          password.text.toString()) == true) {
+                                        var usu1 = usu;
+                                        Navigator.popAndPushNamed(
+                                            context, '/mainMenu',
+                                            arguments: usu1);
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Contraseña incorrecta",
+                                          toastLength: Toast.LENGTH_SHORT, // Duración del toast (Toast.LENGTH_SHORT o Toast.LENGTH_LONG)
+                                          gravity: ToastGravity.BOTTOM, // Posición del toast (TOP, BOTTOM, CENTER)
+                                          timeInSecForIosWeb: 1, // Duración para iOS y web (en segundos)
+                                          backgroundColor: Colors.grey[800], // Color de fondo del toast
+                                          textColor: Colors.white, // Color del texto del toast
+                                          fontSize: 16.0, // Tamaño de fuente del texto del toast
+                                        );
+                                      }
                                     }
                                   }, child: Text("Iniciar sesión")), //Botón para enviar el formulario, default login
                             ),

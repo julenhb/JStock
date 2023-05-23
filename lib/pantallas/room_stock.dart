@@ -34,12 +34,22 @@ class _RoomStockState extends State<RoomStock> {
   Future<void> fetchObjetosData(int idInventario, int idAula) async {
       final fetchedObjetos = await ApiControls.getoObjetosByRoomStock(idInventario, idAula);
       setState(() {
-        objetos = fetchedObjetos;
+        final objetosAll = fetchedObjetos;
+        for (Objeto o in objetosAll){
+          if(o.idAula == idAula){
+            objetos.add(o);
+          }
+        }
       });
   }
 
   @override
   Widget build(BuildContext context) {
+    final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    user = bundle[0];
+    final Inventario stock = bundle[1];
+    final Aula aula = bundle[3];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Room Stock'),
@@ -54,14 +64,12 @@ class _RoomStockState extends State<RoomStock> {
                 columns: [
                   DataColumn(label: Text('Nombre')),
                   DataColumn(label: Text('Nº de Serie')),
-                  // Puedes agregar más columnas si es necesario
                 ],
                 rows: objetos.map((objeto) {
                   return DataRow(
                     cells: [
                       DataCell(Text(objeto.nombre)),
                       DataCell(Text(objeto.numSerie))
-                      // Puedes agregar más celdas si es necesario
                     ],
                   );
                 }).toList(),
@@ -81,8 +89,11 @@ class _RoomStockState extends State<RoomStock> {
               ),
               Spacer(),
               FloatingActionButton(
-                onPressed: () {
-                  // Lógica al presionar el botón flotante
+                onPressed: () async {
+                  List<dynamic> tagPack = [];
+                  tagPack.clear();
+                  tagPack.addAll([aula, stock, user]);
+                  await Navigator.pushNamed(context, '/scanTag', arguments: tagPack);
                 },
                 backgroundColor: Colors.deepPurple,
                 child: Icon(Icons.qr_code_scanner),

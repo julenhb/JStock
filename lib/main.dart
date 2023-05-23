@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tfg_jhb/entity/inventario.dart';
 import 'package:tfg_jhb/entity/usuario.dart';
 import 'package:tfg_jhb/pantallas/general_stock.dart';
@@ -20,6 +22,7 @@ void main (){
     debugShowCheckedModeBanner: false,
     home: LoginPage(),
     routes: {
+      '/loginPage': (context) => LoginPage(),
       '/checkLoginPage': (context) => CheckLoginPage(),
       '/userSignUpPage': (context) => UserSignUpPage(),
       '/signUpPage': (context) => RegistroPage(),
@@ -28,7 +31,7 @@ void main (){
       '/roomItemSearch': (context) => RoomItemSearch(),
       '/roomStock': (context) => RoomStock(),
       '/allStock': (context) => GeneralStock(),
-      '/scannerTag': (context) => ScannerScreen(),
+      '/scanTag': (context) => ScannerScreen(),
     },
   ));
 }
@@ -81,10 +84,26 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 60) //así se ha alargado el botón
                         ),
                         onPressed: () async {
-                          var usu = await ApiControls.getUsuarioByNickname(nick.text.toString());
+                          if(nick.text.toString().isEmpty){
+                            Fluttertoast.showToast(msg: "No puedes dejar campos vacíos");
+                          } else {
+                            var usu = await ApiControls.getUsuarioByNickname(
+                                nick.text.toString());
 
-                          if(usu.id !=0){
-                            Navigator.pushNamed(context, '/checkLoginPage', arguments: usu); //ASÍ NOS MOVEMOS ENTRE PANTALLAS PARA LLEVAR OBJETOS
+                            if (usu.id != 0) {
+                              Navigator.pushNamed(context, '/checkLoginPage',
+                                  arguments: usu); //ASÍ NOS MOVEMOS ENTRE PANTALLAS PARA LLEVAR OBJETOS
+                              nick.text = "";
+                            } else {
+                              showDialog(context: context, builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Usuario existente"),
+                                  content: Text(
+                                      "El nickname que has elegido ya existe :("),
+                                );
+                              },
+                              );
+                            }
                           }
                         },
                         child:
@@ -96,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text("¿No estás registrado todavía?"),
                       TextButton(onPressed: (){
                         Navigator.pushNamed(context, '/userSignUpPage');
+                        nick.text = "";
                       }, child: Text("Regístrate"))
                     ],
                   )

@@ -130,6 +130,9 @@ class _RoomItemSearchState extends State<RoomItemSearch> {
           if (selectedAula != "Seleccionar") {
             List<dynamic> paquete = bundle;
             final aula = aulas.firstWhere((element) => element.nombre == selectedAula, orElse: () => Aula());
+            if(paquete.length >= 4){
+              paquete.removeAt(3);
+            }
             paquete.add(aula);
             Navigator.pushNamed(context, '/roomStock', arguments: paquete);
           }else{

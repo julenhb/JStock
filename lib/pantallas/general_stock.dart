@@ -12,6 +12,7 @@ class GeneralStock extends StatefulWidget {
 }
 
 class _GeneralStockState extends State<GeneralStock> {
+
   late List<Objeto> objetos = [];
   late List<Aula> aulas = [];
   late List<String> aulasNombre = [];
@@ -59,9 +60,16 @@ class _GeneralStockState extends State<GeneralStock> {
 
   @override
   Widget build(BuildContext context) {
+    final bundle = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    Usuario userToGo = bundle[0];
+    Inventario stockToGo = bundle[1];
+
+    late int selectedAula;
+    late Aula aulaToGo;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Room Stock'),
+        title: Text(ayuda1),
         backgroundColor: Colors.green,
       ),
       body: loadingAulas
@@ -86,7 +94,19 @@ class _GeneralStockState extends State<GeneralStock> {
                         return DataRow(
                           cells: [
                             DataCell(Text(objeto.nombre)),
-                            DataCell(Text(aulaNombre)),
+                            DataCell(
+                              Text(aulaNombre),
+                              onTap: () async {
+                                setState(() {
+                                  selectedAula = objeto.idAula;
+                                });
+
+                                final aulaToGo = await ApiControls.getAulaById(selectedAula);
+                                String aux = "auxiliar";
+                                final List<dynamic> args = [userToGo, stockToGo, aux, aulaToGo];
+                                await Navigator.pushNamed(context, '/roomStock', arguments: args);
+                              },
+                            ),
                             // Puedes agregar más celdas si es necesario
                           ],
                         );
@@ -98,20 +118,12 @@ class _GeneralStockState extends State<GeneralStock> {
             ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Row(
             children: [
               Text(
-                '$ayuda1 - $ayuda2',
+                ayuda2,
                 style: TextStyle(fontSize: 16),
-              ),
-              Spacer(),
-              FloatingActionButton(
-                onPressed: () {
-                  // Lógica al presionar el botón flotante
-                },
-                backgroundColor: Colors.deepPurple,
-                child: Icon(Icons.qr_code_scanner),
               ),
             ],
           ),
