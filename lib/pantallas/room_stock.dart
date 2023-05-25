@@ -83,11 +83,13 @@ class _RoomStockState extends State<RoomStock> {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              Text(
-                '$ayuda1 - $ayuda2',
-                style: TextStyle(fontSize: 16),
+              Expanded(
+                child: Text(
+                  '$ayuda1 - $ayuda2',
+                  style: TextStyle(fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              Spacer(),
               FloatingActionButton(
                 onPressed: () async {
                   List<dynamic> tagPack = [];
