@@ -171,10 +171,16 @@ class _ItemSearchState extends State<ItemSearch> {
         backgroundColor: Colors.red,
         child: Icon(Icons.arrow_forward),
         onPressed: () async {
-          final planta = plantas.firstWhere((element) => element.nombre == selectedPlanta, orElse: () => Planta());
+          final ala = alas.firstWhere((element) => element.nombre == selectedAla, orElse: () => Ala());
+          Planta planta = plantas.firstWhere(
+                (element) =>
+            element.nombre == selectedPlanta && element.idAla == ala.id,
+            orElse: () => Planta(),
+          );
           if(planta.id != 0) {
             List<dynamic> paquete = bundle;
             paquete.add(planta);
+            print(planta.id);
             await Navigator.pushNamed(context, '/roomItemSearch', arguments: paquete);
             paquete.removeAt(2);
           }

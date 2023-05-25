@@ -41,12 +41,15 @@ class _GeneralStockState extends State<GeneralStock> {
     });
 
     final idAulas = objetos.map((objeto) => objeto.idAula).toSet();
+    final aulasMap = <int, String>{};
+
     for (final idAula in idAulas) {
-      await fetchAulaData(idAula);
-      aulasNombre.add(aulas.firstWhere((aula) => aula.id == idAula).nombre);
+      final fetchedAula = await ApiControls.getAulaById(idAula) as Aula;
+      aulasMap[idAula] = fetchedAula.nombre;
     }
 
     setState(() {
+      aulasNombre = objetos.map((objeto) => aulasMap[objeto.idAula] ?? '').toList();
       loadingAulas = false;
     });
   }
