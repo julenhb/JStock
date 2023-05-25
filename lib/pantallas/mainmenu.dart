@@ -161,33 +161,6 @@ class _MainMenuState extends State<MainMenu> {
                       child: Text('Ver inventario'),
                     ),
                   ),
-                  SizedBox(height: 16),
-                  FractionallySizedBox(
-                    widthFactor: 0.8,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (selectedInventario == "Seleccionar"){
-                          Fluttertoast.showToast(
-                            msg: "Debes seleccionar un inventario para seguir avanzando",
-                            toastLength: Toast.LENGTH_SHORT, // Duración del toast (Toast.LENGTH_SHORT o Toast.LENGTH_LONG)
-                            gravity: ToastGravity.BOTTOM, // Posición del toast (TOP, BOTTOM, CENTER)
-                            timeInSecForIosWeb: 1, // Duración para iOS y web (en segundos)
-                            backgroundColor: Colors.grey[800], // Color de fondo del toast
-                            textColor: Colors.white, // Color del texto del toast
-                            fontSize: 16.0, // Tamaño de fuente del texto del toast
-                          );
-                        } else{
-                          bundle.clear();
-                          Usuario usu1 = usu;
-                          Inventario stock = inventarios.firstWhere((element) => element.nombre == selectedInventario, orElse: () => Inventario());
-                          bundle.add(usu1);
-                          bundle.add(stock);
-                          Navigator.pushNamed(context, '/scanTag', arguments: bundle);
-                        }
-                      },
-                      child: Text('Scanner'),
-                    ),
-                  ),
                 ],
               ),
             ),

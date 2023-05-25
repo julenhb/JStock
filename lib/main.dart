@@ -51,17 +51,18 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
-      body:Stack(
+      body:SingleChildScrollView(
+        child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 50, left: 20),
             child: Text("Bienvenido \nde nuevo", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.w300),),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.45),
+            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+            margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.23),
             width: double.infinity,
-            height: 450,
+            height: 400,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50))
@@ -97,9 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                             } else {
                               showDialog(context: context, builder: (context) {
                                 return AlertDialog(
-                                  title: Text("Usuario existente"),
+                                  title: Text("Error de credenciales"),
                                   content: Text(
-                                      "El nickname que has elegido ya existe :("),
+                                      "El nickname que has introducido no existe :("),
                                 );
                               },
                               );
@@ -118,11 +119,12 @@ class _LoginPageState extends State<LoginPage> {
                         nick.text = "";
                       }, child: Text("Regístrate"))
                     ],
-                  )
+                  ),
                 ],
               )
           )
         ],
+        ),
       ) ,
     );
   }

@@ -18,7 +18,8 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
-      body:Stack(
+        body:SingleChildScrollView(
+        child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 50, left: 20),
@@ -26,9 +27,9 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           ),
           Container(
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-              margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.45),
+              margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.23),
               width: double.infinity,
-              height: 450,
+              height: 400,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50))
@@ -95,6 +96,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           )
         ],
       ) ,
+        ),
     );
   }
 }
